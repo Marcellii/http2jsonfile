@@ -16,16 +16,14 @@ post '/json' do
 end
 
 delete '/json' do
+  File.rename 'hashtags.json', "hashtags.#{Time.new}.json"
   file = File.open('hashtags.json', 'w')
   file.close
-  File.rename 'hashtags.json', "hashtags.#{Time.new}.json"
   return 200, JSON.pretty_generate(get_hashtags)
 end
 
 def write_hashtag(hashtag)
   all_hashtags = get_hashtags
-  puts all_hashtags
-  #all_hashtags['hashtags'].empty? ? all_hashtags['hashtags'] = hashtag : all_hashtags['hashtags'] << hashtag
   all_hashtags['hashtags'] << hashtag
   all_hashtags['hashtags'].uniq!
   file = File.open('hashtags.json', 'w+')
@@ -41,5 +39,5 @@ def write_hashtags(hashtags)
 end
 
 def get_hashtags
-  File.exist?('hashtags.json') ? JSON.parse(File.read('hashtags.json')) : { "hashtags" => [] }
+  File.exist?('hashtags.json') ? JSON.parse(File.read('hashtags.json')) : { 'hashtags' => [] }
 end
