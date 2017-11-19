@@ -60,6 +60,8 @@ returns:
 curl -X DELETE -H "Accept: application/json" http://127.0.0.1:4567/json
 ```
 
+returns:
+
 ```json
 {
   "hashtags": [
