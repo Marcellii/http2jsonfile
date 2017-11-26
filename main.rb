@@ -5,10 +5,11 @@ require 'sinatra'
 require 'json'
 
 get '/json' do
-  return 200, JSON.pretty_generate(get_hashtags)
+return 200, JSON.Pretty_generate(get_hashtags)
 end
 
 post '/json' do
+	"Hello #{params[:hastags]}"
   body = JSON.parse(request.body.read)
   hashtags = body['hashtags']
   write_hashtags(hashtags) if hashtags
@@ -36,6 +37,28 @@ def write_hashtags(hashtags)
   hashtags.each do |hashtag|
     write_hashtag(hashtag)
   end
+end
+
+get "/" do
+%q{
+	<button onclick="gethashtags()">Get Hashtags</button>
+	<script>
+	function gethashtags() {
+	get '/json' do
+	return200, JSON.Pretty_generate(get_hashtags)
+	end
+	}
+	</script>
+}
+end
+
+get "/" do
+%q{
+	<form method="post">
+	Enter here your hastags: <input type="text" hastags ="hastags" />
+	<input type="submit" value="Go!" />
+	</form>
+}
 end
 
 def get_hashtags
