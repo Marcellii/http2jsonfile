@@ -9,7 +9,7 @@ return 200, JSON.Pretty_generate(get_hashtags)
 end
 
 post '/json' do
-	"Hello #{params[:hashtags]}"
+#	"Hello #{params[:hashtags]}"
   body = JSON.parse(request.body.read)
   hashtags = body['hashtags']
   write_hashtags(hashtags) if hashtags
@@ -39,26 +39,28 @@ def write_hashtags(hashtags)
   end
 end
 
-get "/" do
-%q{
-	<button onclick="gethashtags()">Get Hashtags</button>
-	<script>
-	function gethashtags() {
-	get '/json' do
-	return200, JSON.Pretty_generate(get_hashtags)
-	end
-	}
-	</script>
-}
-end
+#get "/" do
+#%q{
+#	<button onclick="gethashtags()">Get Hashtags</button>
+#	<script>
+#	function gethashtags() {
+#	get '/json' do
+#	return200, JSON.Pretty_generate(get_hashtags)
+#	end
+#	}
+#	</script>
+#}
+#end
 
-get "/" do
+get '/' do
 %q{
-	<form method="post">
-	Enter here your hashtags: <input type="text" hashtags ="hashtags" />
-	<input type="submit" value="Go!" />
+	<form method="post" action="/json">>
+	<p> Enter here your hashtags: <input type ="text" name ="hashtagform"></p>
+	<input type="submit">
 	</form>
+
 }
+
 end
 
 def get_hashtags
