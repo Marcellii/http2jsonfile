@@ -9,7 +9,7 @@ return 200, JSON.Pretty_generate(get_hashtags)
 end
 
 post '/json' do
-	"Hello #{params[:hastags]}"
+	"Hello #{params[:hashtags]}"
   body = JSON.parse(request.body.read)
   hashtags = body['hashtags']
   write_hashtags(hashtags) if hashtags
@@ -55,7 +55,7 @@ end
 get "/" do
 %q{
 	<form method="post">
-	Enter here your hastags: <input type="text" hastags ="hastags" />
+	Enter here your hashtags: <input type="text" hashtags ="hashtags" />
 	<input type="submit" value="Go!" />
 	</form>
 }
