@@ -3,65 +3,21 @@
 # sinatra.rb
 require 'sinatra'
 require 'json'
+require 'httparty'
 
-get '/json' do
-return 200, JSON.Pretty_generate(get_hashtags)
+post '/json' do
+  hashtag = params['hashtagform'].split(',')
+   HTTParty.post("http://ci-slave1.virtapi.org:9494/json", :headers => {'Content-Type'=>'application/json'}, :body => {"hashtags" => hashtag}.to_json)
+  redirect '/'
 end
-
-post '/json/:hashtagform' do
-  body = JSON.parse(request.body.read)
-  hashtags = body[#{params['hashtagform']}]
-  write_hashtags(hashtags) if hashtags
-  return 200, JSON.pretty_generate(get_hashtags)
-end
-
-delete '/json' do
-  File.rename 'hashtags.json', "hashtags.#{Time.new}.json"
-  file = File.open('hashtags.json', 'w')
-  file.close
-  return 200, JSON.pretty_generate(get_hashtags)
-end
-
-def write_hashtag(hashtag)
-  all_hashtags = get_hashtags
-  all_hashtags['hashtags'] << hashtag
-  all_hashtags['hashtags'].uniq!
-  file = File.open('hashtags.json', 'w+')
-  puts all_hashtags
-  file.write(JSON.pretty_generate(all_hashtags))
-  file.close
-end
-
-def write_hashtags(hashtags)
-  hashtags.each do |hashtag|
-    write_hashtag(hashtag)
-  end
-end
-
-#get "/" do
-#%q{
-#	<button onclick="gethashtags()">Get Hashtags</button>
-#	<script>
-#	function gethashtags() {
-#	get '/json' do
-#	return200, JSON.Pretty_generate(get_hashtags)
-#	end
-#	}
-#	</script>
-#}
-#end
 
 get '/' do
-%q{
-	<form method="post" action="/json">>
-	<p> Enter here your hashtags: <input type ="text" name ="hashtagform"></p>
+  get_hashtags = HTTParty.get("http://ci-slave1.virtapi.org:9494/json")
+  got_hashtag = JSON.load(get_hashtags.body)['hashtags'].join(',')
+%Q{
+	<form method="post" action="/json">
+	<p> Enter here your hashtags: <input type ="text" name ="hashtagform" value=#{got_hashtag}></p>
 	<input type="submit">
-	</form>
-}
-
-
-end
-
-def get_hashtags
-  File.exist?('hashtags.json') ? JSON.parse(File.read('hashtags.json')) : { 'hashtags' => [] }
+	</forrm>
+ }
 end
