@@ -11,6 +11,10 @@ post '/json' do
   redirect '/'
 end
 
+post '/jsond' do
+	HTTParty.delete("http://ci-slave1.virtapi.org:9494/json")
+end
+
 get '/' do
   get_hashtags = HTTParty.get("http://ci-slave1.virtapi.org:9494/json")
   got_hashtag = JSON.load(get_hashtags.body)['hashtags'].join(',')
@@ -18,6 +22,9 @@ get '/' do
 	<form method="post" action="/json">
 	<p> Enter here your hashtags: <input type ="text" name ="hashtagform" value=#{got_hashtag}></p>
 	<input type="submit">
-	</forrm>
+	</form>
+  <form method="post" action="/jsond">
+  <button type="submit" value="Submit">Delete</button>
+  </form>
  }
 end
